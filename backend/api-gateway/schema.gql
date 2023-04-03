@@ -1,0 +1,22 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""test """
+type TestModel {
+  id: ID!
+  description: String!
+  test: Boolean
+}
+
+type Query {
+  test: TestModel!
+}
+
+type Mutation {
+  register(registerData: RegisterDto!): String!
+}
+
+input RegisterDto {
+  email: String!
+}

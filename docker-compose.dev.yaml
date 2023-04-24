@@ -17,6 +17,19 @@ services:
     volumes:
       - ./backend/services/auth-service:/auth-service
       - ./backend/services/auth-service/node_modules:/auth-service/node_modules
+    environment:
+      MONGO_USERNAME: ${DB_AUTH_USERNAME}
+      MONGO_PASSWORD: ${DB_AUTH_PASSWORD}
+  mongo-auth:
+    container_name: mongo-auth
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_AUTH_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_AUTH_PASSWORD}
+    volumes:
+      - ./mongo_data/auth:/data/db
+    ports:
+      - "27017:27017"
   user-service:
     restart: always
     build:
@@ -32,7 +45,6 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
-
   broker:
     image: wurstmeister/kafka:2.11-1.1.1
     depends_on:

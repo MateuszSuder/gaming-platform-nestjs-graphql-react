@@ -6,6 +6,7 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
+import { MongoFilter } from './filters/mongo.filter';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -17,6 +18,7 @@ async function bootstrap() {
           brokers: ['broker:29092'],
         },
         consumer: {
+          rebalanceTimeout: 1000,
           groupId: 'auth-consumer',
         },
       },
@@ -35,6 +37,9 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalFilters(new MongoFilter());
+
   await app.listen();
 }
 bootstrap();

@@ -15,6 +15,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             brokers: ['broker:29092'],
           },
           consumer: {
+            rebalanceTimeout: 1000,
             groupId: 'auth-consumer',
           },
         },

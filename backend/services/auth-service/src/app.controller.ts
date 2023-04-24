@@ -8,7 +8,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern('auth_register')
-  register(registerDto: RegisterDto): string {
-    return this.appService.register(registerDto);
+  register(registerDto: RegisterDto) {
+    return this.appService.registerUser(registerDto);
   }
 }

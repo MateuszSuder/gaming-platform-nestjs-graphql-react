@@ -4,7 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthorizationService } from './authorization.service';
 import { TestModel } from './models/test.model';
 import { UseFilters } from '@nestjs/common';
-import ExceptionFilter from '../globalFilters/ExceptionFilter';
+import ExceptionFilter from '../filters/exception.filter';
 
 @UseFilters(ExceptionFilter)
 @Resolver(() => Register)

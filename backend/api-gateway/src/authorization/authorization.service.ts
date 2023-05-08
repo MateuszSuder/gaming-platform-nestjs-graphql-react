@@ -1,22 +1,13 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
-import { firstValueFrom } from 'rxjs';
+import { RegisterCommand } from './commands/impl/register.command';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Injectable()
-export class AuthorizationService implements OnModuleInit {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
-  ) {}
-
-  async onModuleInit() {
-    this.authClient.subscribeToResponseOf('auth_register');
-    await this.authClient.connect();
-  }
+export class AuthorizationService {
+  constructor(private readonly commandBus: CommandBus) {}
 
   async createUser(userData: RegisterDto) {
-    return await firstValueFrom(
-      this.authClient.send('auth_register', JSON.stringify(userData)),
-    );
+    return this.commandBus.execute(new RegisterCommand(userData));
   }
 }

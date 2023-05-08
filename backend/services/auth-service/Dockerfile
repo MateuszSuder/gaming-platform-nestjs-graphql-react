@@ -7,7 +7,7 @@ RUN yarn
 
 COPY . ./
 
-FROM node:18-alpine
+FROM node:18
 
 COPY --from=BUILD /auth-service/node_modules ./node_modules
 WORKDIR /auth-service

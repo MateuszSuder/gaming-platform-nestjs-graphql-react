@@ -12,6 +12,7 @@ import { GqlExceptionFilter } from '@nestjs/graphql';
 @Catch()
 export default class ExceptionFilter implements GqlExceptionFilter {
   catch(exception: any, host: ArgumentsHost): any {
+    console.log(exception);
     const errorCode = exception.error?.status || exception.statusCode;
 
     switch (errorCode) {

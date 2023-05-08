@@ -7,4 +7,7 @@ export class RegisterDto {
 
   @Field(() => String)
   password: string;
+
+  @Field(() => String)
+  username: string;
 }

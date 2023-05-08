@@ -14,30 +14,68 @@ services:
       context: ./backend/services/auth-service
     depends_on:
       - broker
+      - mongo-auth
     volumes:
       - ./backend/services/auth-service:/auth-service
       - ./backend/services/auth-service/node_modules:/auth-service/node_modules
     environment:
-      MONGO_USERNAME: ${DB_AUTH_USERNAME}
+      MONGO_USERNAME: ${DB_USERNAME}
       MONGO_PASSWORD: ${DB_AUTH_PASSWORD}
-  mongo-auth:
-    container_name: mongo-auth
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_AUTH_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_AUTH_PASSWORD}
-    volumes:
-      - ./mongo_data/auth:/data/db
-    ports:
-      - "27017:27017"
+      PEPPER: ${AUTH_PEPPER}
   user-service:
     restart: always
     build:
       context: ./backend/services/user-service
     depends_on:
       - broker
+      - mongo-user
     volumes:
       - ./backend/services/user-service:/user-service
+    environment:
+      MONGO_USERNAME: ${DB_USERNAME}
+      MONGO_PASSWORD: ${DB_USER_PASSWORD}
+  balance-service:
+    restart: always
+    build:
+      context: ./backend/services/balance-service
+    depends_on:
+      - broker
+      - mongo-balance
+    volumes:
+      - ./backend/services/balance-service:/balance-service
+    environment:
+      MONGO_USERNAME: ${DB_USERNAME}
+      MONGO_PASSWORD: ${DB_BALANCE_PASSWORD}
+  mongo-auth:
+    container_name: mongo-auth
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_AUTH_PASSWORD}
+    volumes:
+      - ./mongo_data/auth:/data/db
+    ports:
+      - "27017:27017"
+  mongo-user:
+    container_name: mongo-user
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_USER_PASSWORD}
+    volumes:
+      - ./mongo_data/user:/data/db
+    ports:
+      - "27018:27017"
+  mongo-balance:
+    container_name: mongo-balance
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_BALANCE_PASSWORD}
+    volumes:
+      - ./mongo_data/balance:/data/db
+    ports:
+      - "27019:27017"
   zookeeper:
     image: wurstmeister/zookeeper:latest
     environment:

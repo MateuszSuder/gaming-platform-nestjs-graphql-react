@@ -5,3 +5,4 @@ docker-compose.yaml
 **/node_modules
 **/dist
 **/.idea
+mongo_data

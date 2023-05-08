@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ description: 'register' })
+@ObjectType({ description: 'Register return type' })
 export class Register {
   @Field((type) => String)
-  email: string;
+  _id: string;
 }

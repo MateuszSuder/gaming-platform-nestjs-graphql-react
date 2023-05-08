@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
+import { MessagePattern } from '@nestjs/microservices';
+import { UserDto } from './dto/user.dto';
+import { Types } from 'mongoose';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @MessagePattern('user_create')
+  createUserProfile(userDto: UserDto): Promise<Types.ObjectId> {
+    return this.appService.createUser(userDto);
   }
 }

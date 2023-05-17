@@ -8,6 +8,8 @@ services:
     volumes:
       - ./backend/api-gateway:/api-gateway
       - ./backend/api-gateway/node_modules:/api-gateway/node_modules
+    environment:
+      COOKIE_SECRET: ${COOKIE_SECRET}
   auth-service:
     restart: always
     build:
@@ -22,6 +24,7 @@ services:
       MONGO_USERNAME: ${DB_USERNAME}
       MONGO_PASSWORD: ${DB_AUTH_PASSWORD}
       PEPPER: ${AUTH_PEPPER}
+      AUTH_JWT: ${AUTH_JWT}
   user-service:
     restart: always
     build:

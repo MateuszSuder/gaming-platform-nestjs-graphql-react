@@ -1,8 +1,9 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RegisterCommand } from '../impl/register.command';
 import { Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { RegisterRollbackCommand } from '../impl/register.rollback.command';
 
 @CommandHandler(RegisterCommand)
 export class RegisterHandler
@@ -14,7 +15,7 @@ export class RegisterHandler
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     @Inject('USER_SERVICE') private readonly userClient: ClientKafka,
     @Inject('BALANCE_SERVICE') private readonly balanceClient: ClientKafka,
-    private eventBus: EventBus,
+    private commandBus: CommandBus,
   ) {}
 
   async onModuleInit() {
@@ -32,32 +33,32 @@ export class RegisterHandler
     } = command;
     this.logger.log(`Executing command for user "${username}"`);
 
+    let userId: null | string = null;
+
     try {
-      const authResult = await firstValueFrom(
+      userId = await firstValueFrom<string>(
         this.authClient.send('auth_create', JSON.stringify(user)),
       );
-
-      console.log('Auth done');
 
       await firstValueFrom(
         this.userClient.send(
           'user_create',
           JSON.stringify({
-            userId: authResult,
+            userId: userId,
             username,
           }),
         ),
       );
 
-      await firstValueFrom(
-        this.balanceClient.send('balance_create', authResult),
-      );
+      await firstValueFrom(this.balanceClient.send('balance_create', userId));
 
       this.logger.log(`Created user "${username}"`);
 
-      return authResult;
+      return userId;
     } catch (e) {
       this.logger.error(`Failed to create user "${username}"`, e);
+
+      await this.commandBus.execute(new RegisterRollbackCommand(userId));
 
       throw e;
     }

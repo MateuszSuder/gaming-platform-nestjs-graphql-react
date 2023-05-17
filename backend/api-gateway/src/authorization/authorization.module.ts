@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 import { AuthorizationService } from './authorization.service';
 import { AuthorizationResolver } from './authorization.resolver';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { RegisterCommand } from './commands/impl/register.command';
-import { RegisterHandler } from './commands/handlers/register.handler';
 import { CqrsModule } from '@nestjs/cqrs';
+import { CommandHandlers } from './commands/handlers';
 
 @Module({
   imports: [
@@ -54,11 +53,6 @@ import { CqrsModule } from '@nestjs/cqrs';
     ]),
     CqrsModule,
   ],
-  providers: [
-    AuthorizationResolver,
-    AuthorizationService,
-    RegisterCommand,
-    RegisterHandler,
-  ],
+  providers: [AuthorizationResolver, AuthorizationService, ...CommandHandlers],
 })
 export class AuthorizationModule {}

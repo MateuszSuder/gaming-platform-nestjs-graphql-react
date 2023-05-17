@@ -13,8 +13,13 @@ import { GraphQLFormattedError } from 'graphql/error';
       autoTransformHttpErrors: true,
       includeStacktraceInErrorResponses: false,
       fieldResolverEnhancers: ['filters'],
+      playground: {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
+      context: (req, rep) => ({ req, rep }),
       formatError: (formattedError) => {
-        console.log(formattedError);
         const error: GraphQLFormattedError = {
           message:
             (formattedError.extensions?.originalError as { errors: string })

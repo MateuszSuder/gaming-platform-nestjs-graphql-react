@@ -5,7 +5,12 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop({ required: true, index: true, type: SchemaTypes.ObjectId })
+  @Prop({
+    required: true,
+    index: true,
+    unique: true,
+    type: SchemaTypes.ObjectId,
+  })
   userId: Types.ObjectId;
 
   @Prop({ required: true, unique: true, index: true })

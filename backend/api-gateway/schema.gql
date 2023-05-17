@@ -14,11 +14,20 @@ type Query {
 }
 
 type Mutation {
+  """Register mutation"""
   register(registerData: RegisterDto!): String!
+
+  """Login mutation"""
+  login(login: LoginDto!): Boolean!
 }
 
 input RegisterDto {
   email: String!
   password: String!
   username: String!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
 }

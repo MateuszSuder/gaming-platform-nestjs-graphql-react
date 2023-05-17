@@ -12,4 +12,9 @@ export class AppController {
   createUserProfile(userDto: UserDto): Promise<Types.ObjectId> {
     return this.appService.createUser(userDto);
   }
+
+  @MessagePattern('user_delete')
+  deleteUserBalance(userId: string) {
+    return this.appService.deleteUser(userId);
+  }
 }

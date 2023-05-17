@@ -11,4 +11,9 @@ export class AppController {
   createUserBalance(userId: string): Promise<Types.ObjectId> {
     return this.appService.createUserBalance(userId);
   }
+
+  @MessagePattern('balance_delete')
+  deleteUserBalance(userId: string) {
+    return this.appService.deleteUserBalance(userId);
+  }
 }

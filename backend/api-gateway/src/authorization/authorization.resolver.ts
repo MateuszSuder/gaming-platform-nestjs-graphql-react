@@ -28,12 +28,9 @@ export class AuthorizationResolver {
   async login(@Context() context: any, @Args('login') userData: LoginDto) {
     const response = await this.authorizationService.login(userData);
 
-    console.log('res', response);
-
     if (response && response.access_token) {
       try {
         context.rep.setCookie('token', response.access_token);
-        // res.setCookie('token', token);
       } catch (e) {
         console.error(e);
 

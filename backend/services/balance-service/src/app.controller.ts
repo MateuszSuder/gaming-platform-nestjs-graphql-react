@@ -16,4 +16,14 @@ export class AppController {
   deleteUserBalance(userId: string) {
     return this.appService.deleteUserBalance(userId);
   }
+
+  @MessagePattern('balance_add')
+  addUserBalance(addBalanceInput: { userId: string; toAdd: number }) {
+    return this.appService.addUserBalance(addBalanceInput);
+  }
+
+  @MessagePattern('balance_get')
+  getUserBalance(userId: string) {
+    return this.appService.getUserBalance(userId);
+  }
 }

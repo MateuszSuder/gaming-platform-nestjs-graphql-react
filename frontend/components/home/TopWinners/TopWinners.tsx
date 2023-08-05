@@ -1,3 +1,5 @@
+"use client";
+
 import SectionHeader from "@/components/common/SectionHeader";
 
 type Props = {};
@@ -100,7 +102,7 @@ export default function TopWinners(props: Props) {
 							     className={`grid grid-cols-3 justify-center items-center px-2 rounded h-8 ${(index % 2) && 'bg-primary-dark'}`}>
 								<div className='font-bold drop-shadow-text-white-shadow'>{username}</div>
 								<div className='font-bold drop-shadow-text-white-shadow'>{game}</div>
-								<div className='text-right drop-shadow-text-white-shadow'>{multiplier.toLocaleString()}x</div>
+								<div className='text-right drop-shadow-text-white-shadow'>{multiplier.toLocaleString('pl-PL')}x</div>
 							</div>
 						))
 					}

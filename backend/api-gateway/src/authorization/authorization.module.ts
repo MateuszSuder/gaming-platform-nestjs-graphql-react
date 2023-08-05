@@ -4,6 +4,7 @@ import { AuthorizationResolver } from './authorization.resolver';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CommandHandlers } from './commands/handlers';
+import { VerifyHandler } from './commands/handlers/verify.handler';
 
 @Module({
   imports: [
@@ -18,6 +19,8 @@ import { CommandHandlers } from './commands/handlers';
           },
           consumer: {
             rebalanceTimeout: 1000,
+            heartbeatInterval: 10000,
+            sessionTimeout: 60000,
             groupId: `auth-consumer`,
           },
         },
@@ -32,6 +35,8 @@ import { CommandHandlers } from './commands/handlers';
           },
           consumer: {
             rebalanceTimeout: 1000,
+            heartbeatInterval: 10000,
+            sessionTimeout: 60000,
             groupId: `user-consumer`,
           },
         },
@@ -46,6 +51,8 @@ import { CommandHandlers } from './commands/handlers';
           },
           consumer: {
             rebalanceTimeout: 1000,
+            heartbeatInterval: 10000,
+            sessionTimeout: 60000,
             groupId: `balance-consumer`,
           },
         },
@@ -54,5 +61,6 @@ import { CommandHandlers } from './commands/handlers';
     CqrsModule,
   ],
   providers: [AuthorizationResolver, AuthorizationService, ...CommandHandlers],
+  exports: [VerifyHandler],
 })
 export class AuthorizationModule {}

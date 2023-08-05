@@ -3,7 +3,7 @@ import { RegisterCommand } from '../impl/register.command';
 import { Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterRollbackCommand } from '../impl/register.rollback.command';
+import { RegisterRollbackCommand } from '../impl/register-rollback.command';
 
 @CommandHandler(RegisterCommand)
 export class RegisterHandler

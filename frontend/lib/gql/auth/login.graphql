@@ -1,0 +1,3 @@
+mutation login($credentials: LoginDto!) {
+    login(login: $credentials)
+}

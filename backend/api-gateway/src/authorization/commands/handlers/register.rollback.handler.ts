@@ -2,13 +2,14 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterRollbackCommand } from '../impl/register.rollback.command';
+import { RegisterRollbackCommand } from '../impl/register-rollback.command';
 
 @CommandHandler(RegisterRollbackCommand)
 export class RegisterRollbackHandler
   implements ICommandHandler<RegisterRollbackCommand>, OnModuleInit
 {
   private readonly logger = new Logger('Register rollback handler');
+
   constructor(
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     @Inject('USER_SERVICE') private readonly userClient: ClientKafka,

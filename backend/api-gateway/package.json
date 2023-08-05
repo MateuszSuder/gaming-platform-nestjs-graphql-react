@@ -31,13 +31,17 @@
     "@nestjs/microservices": "^9.3.12",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^9.3.12",
+    "@nestjs/platform-socket.io": "^9.4.2",
+    "@nestjs/websockets": "^9.4.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cookie": "^0.5.0",
     "fastify": "^4.17.0",
     "graphql": "^16.6.0",
     "kafkajs": "^2.2.4",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "socket.io": "^4.6.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

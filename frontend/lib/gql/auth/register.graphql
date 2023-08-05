@@ -1,0 +1,3 @@
+mutation register($registerData: RegisterDto!) {
+    register(registerData: $registerData)
+}

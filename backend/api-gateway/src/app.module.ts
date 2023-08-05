@@ -3,6 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { GraphQLFormattedError } from 'graphql/error';
+import { ThreeCardsMonteModule } from './game/three-cards-monte/three-cards-monte.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -20,28 +22,36 @@ import { GraphQLFormattedError } from 'graphql/error';
       },
       context: (req, rep) => ({ req, rep }),
       formatError: (formattedError) => {
-        const error: GraphQLFormattedError = {
-          message:
-            (formattedError.extensions?.originalError as { errors: string })
-              ?.errors || formattedError.message,
-          extensions: {
-            code:
-              HttpStatus[formattedError.extensions?.status as number] ||
-              formattedError.extensions?.code,
-            statusCode:
-              formattedError.extensions?.status ||
-              (
-                formattedError.extensions.originalError as {
-                  statusCode: number;
-                }
-              ).statusCode,
-          },
-          locations: formattedError.locations,
-        };
+        console.log(formattedError);
+        try {
+          const error: GraphQLFormattedError = {
+            message:
+              (formattedError.extensions?.originalError as { errors: string })
+                ?.errors || formattedError.message,
+            extensions: {
+              code:
+                HttpStatus[formattedError.extensions?.status as number] ||
+                formattedError.extensions?.code,
+              statusCode:
+                formattedError.extensions?.status ||
+                (
+                  formattedError.extensions.originalError as {
+                    statusCode: number;
+                  }
+                )?.statusCode,
+            },
+            locations: formattedError.locations,
+          };
 
-        return error;
+          return error;
+        } catch (e) {
+          console.error(e);
+        }
       },
     }),
+    ThreeCardsMonteModule,
+    GameModule,
   ],
+  providers: [],
 })
 export class AppModule {}

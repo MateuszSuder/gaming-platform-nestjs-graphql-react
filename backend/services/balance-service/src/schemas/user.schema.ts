@@ -13,7 +13,7 @@ export class User {
   })
   userId: Types.ObjectId;
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ required: true, default: 10000 })
   balance: number;
 }
 

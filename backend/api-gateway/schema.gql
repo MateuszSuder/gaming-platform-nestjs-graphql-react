@@ -9,8 +9,31 @@ type TestModel {
   test: Boolean
 }
 
+type GameModel {
+  id: Float!
+  name: String!
+  category: Category!
+}
+
+enum Category {
+  SLOT
+  TABLE
+  OTHER
+}
+
+type CategoryModel {
+  id: Float!
+  label: String!
+}
+
 type Query {
   test: TestModel!
+
+  """Returns list of games with ids"""
+  gameList: [GameModel!]!
+
+  """Returns list of categories"""
+  categoryList: [CategoryModel!]!
 }
 
 type Mutation {

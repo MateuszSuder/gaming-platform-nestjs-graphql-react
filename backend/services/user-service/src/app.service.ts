@@ -26,4 +26,14 @@ export class AppService {
   async deleteUser(userId: string) {
     return this.userModel.deleteOne({ userId });
   }
+
+  async getUser(userId: string) {
+    this.logger.log(`Getting user with id ${userId}`);
+    const { userId: id, username } = await this.userModel.findOne({ userId });
+
+    return {
+      id,
+      username,
+    };
+  }
 }

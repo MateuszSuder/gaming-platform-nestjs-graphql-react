@@ -10,11 +10,15 @@ services:
       - ./backend/api-gateway/node_modules:/api-gateway/node_modules
     environment:
       COOKIE_SECRET: ${COOKIE_SECRET}
+    depends_on:
+      - zookeeper
+      - broker
   auth-service:
     restart: always
     build:
       context: ./backend/services/auth-service
     depends_on:
+      - zookeeper
       - broker
       - mongo-auth
     volumes:
@@ -30,6 +34,7 @@ services:
     build:
       context: ./backend/services/user-service
     depends_on:
+      - zookeeper
       - broker
       - mongo-user
     volumes:
@@ -42,6 +47,7 @@ services:
     build:
       context: ./backend/services/balance-service
     depends_on:
+      - zookeeper
       - broker
       - mongo-balance
     volumes:
@@ -54,6 +60,7 @@ services:
     build:
       context: ./backend/services/game-service
     depends_on:
+      - zookeeper
       - broker
       - mongo-game
     volumes:

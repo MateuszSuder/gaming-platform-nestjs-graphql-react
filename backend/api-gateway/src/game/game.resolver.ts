@@ -3,12 +3,6 @@ import { GameService } from './game.service';
 import { GameModel } from './models/game.model';
 import { CategoryModel } from './models/category.model';
 
-export enum Category {
-  Slot,
-  Table,
-  Other,
-}
-
 @Resolver()
 export class GameResolver {
   constructor(private readonly gameService: GameService) {}

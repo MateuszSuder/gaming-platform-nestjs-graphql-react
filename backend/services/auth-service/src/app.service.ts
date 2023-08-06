@@ -1,7 +1,7 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';
-import { User, UserDocument } from "./schemas/user.schema";
+import { User, UserDocument } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
@@ -44,7 +44,10 @@ export class AppService {
 
   async login({ email, password: userPassword }) {
     this.logger.log(`[]: User login`);
-    const user: UserDocument = await this.userModel.findOne({ email }, { password: 1 });
+    const user: UserDocument = await this.userModel.findOne(
+      { email },
+      { password: 1 },
+    );
 
     if (!user) {
       this.logger.log(`[]: User incorrect credentials [1]`);
@@ -72,9 +75,7 @@ export class AppService {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      throw new RpcException(
-        new UnauthorizedException('Unauthorized')
-      )
+      throw new RpcException(new UnauthorizedException('Unauthorized'));
     }
   }
 }

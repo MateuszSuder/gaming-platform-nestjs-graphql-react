@@ -25,7 +25,7 @@ export enum Category {
 
 export type CategoryModel = {
   __typename?: 'CategoryModel';
-  id: Scalars['Float']['output'];
+  id: Category | '%future added value';
   label: Scalars['String']['output'];
 };
 
@@ -65,7 +65,7 @@ export type Query = {
   categoryList: Array<CategoryModel>;
   /** Returns list of games with ids */
   gameList: Array<GameModel>;
-  test: TestModel;
+  user: UserModel;
 };
 
 export type RegisterDto = {
@@ -74,12 +74,12 @@ export type RegisterDto = {
   username: Scalars['String']['input'];
 };
 
-/** test  */
-export type TestModel = {
-  __typename?: 'TestModel';
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  test?: Maybe<Scalars['Boolean']['output']>;
+/** User return type */
+export type UserModel = {
+  __typename?: 'UserModel';
+  _id: Scalars['String']['output'];
+  balance: Scalars['Float']['output'];
+  username: Scalars['String']['output'];
 };
 
 export type LoginMutationVariables = Exact<{
@@ -96,10 +96,15 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: string };
 
+export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', username: string, balance: number } };
+
 export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CategoryListQuery = { __typename?: 'Query', categoryList: Array<{ __typename?: 'CategoryModel', id: number, label: string }> };
+export type CategoryListQuery = { __typename?: 'Query', categoryList: Array<{ __typename?: 'CategoryModel', id: Category, label: string }> };
 
 export type GameListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -169,6 +174,41 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UserDocument = gql`
+    query user {
+  user {
+    username
+    balance
+  }
+}
+    `;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+      }
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const CategoryListDocument = gql`
     query categoryList {
   categoryList {

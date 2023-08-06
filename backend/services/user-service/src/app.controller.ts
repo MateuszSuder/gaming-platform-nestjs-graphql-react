@@ -17,4 +17,10 @@ export class AppController {
   deleteUserBalance(userId: string) {
     return this.appService.deleteUser(userId);
   }
+
+  @MessagePattern('user_get')
+  async getUser(user: { userId: string }) {
+    console.log(user.userId);
+    return await this.appService.getUser(user.userId);
+  }
 }

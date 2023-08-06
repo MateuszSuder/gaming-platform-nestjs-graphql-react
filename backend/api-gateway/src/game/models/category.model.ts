@@ -1,10 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-
-export enum Category {
-  SLOT,
-  TABLE,
-  OTHER,
-}
+import { Category } from '../enums/category.enum';
 
 export interface CategoryEntity {
   id: Category | number;
@@ -13,9 +8,9 @@ export interface CategoryEntity {
 
 @ObjectType()
 export class CategoryModel implements CategoryEntity {
-  @Field()
-  id: number;
+  @Field(() => Category)
+  id: Category;
 
-  @Field()
+  @Field(() => String)
   label: string;
 }

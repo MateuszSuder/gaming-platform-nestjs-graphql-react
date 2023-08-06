@@ -2,11 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""test """
-type TestModel {
-  id: ID!
-  description: String!
-  test: Boolean
+"""User return type"""
+type UserModel {
+  _id: String!
+  username: String!
+  balance: Float!
 }
 
 type GameModel {
@@ -22,12 +22,12 @@ enum Category {
 }
 
 type CategoryModel {
-  id: Float!
+  id: Category!
   label: String!
 }
 
 type Query {
-  test: TestModel!
+  user: UserModel!
 
   """Returns list of games with ids"""
   gameList: [GameModel!]!

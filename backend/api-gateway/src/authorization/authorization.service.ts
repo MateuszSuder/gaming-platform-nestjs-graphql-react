@@ -4,6 +4,8 @@ import { RegisterCommand } from './commands/impl/register.command';
 import { CommandBus } from '@nestjs/cqrs';
 import { LoginDto } from './dto/login.dto';
 import { LoginCommand } from './commands/impl/login.command';
+import { UserGetCommand } from './commands/impl/userGet.command';
+import { BalanceGetCommand } from './commands/impl/balanceGet.command';
 
 @Injectable()
 export class AuthorizationService {
@@ -16,5 +18,22 @@ export class AuthorizationService {
   async login(userData: LoginDto) {
     const { email, password } = userData;
     return await this.commandBus.execute(new LoginCommand(email, password));
+  }
+
+  async getUser(userId: string) {
+    const user = await this.commandBus.execute<
+      UserGetCommand,
+      { username: string }
+    >(new UserGetCommand(userId));
+
+    const balance = await this.commandBus.execute<
+      BalanceGetCommand,
+      { balance: number }
+    >(new BalanceGetCommand(userId));
+
+    return {
+      username: user.username,
+      balance: balance.balance,
+    };
   }
 }

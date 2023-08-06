@@ -1,23 +1,28 @@
-import {createContext, FunctionComponent, ReactNode, useContext, useState} from "react";
+import {createContext, Dispatch, FunctionComponent, ReactNode, SetStateAction, useContext, useState} from "react";
 import {CategoryModel, GameModel, useCategoryListQuery, useGameListQuery} from "@/types/gql/graphql";
 
+export type ExtendedCategory = CategoryModel | { id: 'All', label: string };
+
 interface IGameListProviderProps {
-	categories: CategoryModel[],
+	categories: ExtendedCategory[],
 	games: GameModel[],
 	categoriesLoading: boolean,
-	gamesLoading: boolean
+	gamesLoading: boolean,
+	chosenCategory: ExtendedCategory['id'],
+	setChosenCategory?: Dispatch<SetStateAction<ExtendedCategory['id']>>
 }
 
 const GameListContext = createContext<IGameListProviderProps>({
 	games: [],
 	categories: [],
 	categoriesLoading: true,
-	gamesLoading: true
+	gamesLoading: true,
+	chosenCategory: 'All',
 });
 
 const defaultCategories = [
 	{
-		id: -1,
+		id: 'All' as const,
 		label: 'All games'
 	}
 ]
@@ -27,7 +32,8 @@ type Props = {
 }
 
 export const GameListProvider: FunctionComponent<Props> = ({children}) => {
-	const [categories, setCategories] = useState<CategoryModel[]>(defaultCategories);
+	const [chosenCategory, setChosenCategory] = useState<CategoryModel['id'] | 'All'>('All');
+	const [categories, setCategories] = useState<ExtendedCategory[]>(defaultCategories);
 	const {data, loading: gamesLoading} = useGameListQuery();
 
 	const {loading: categoriesLoading} = useCategoryListQuery({
@@ -48,7 +54,9 @@ export const GameListProvider: FunctionComponent<Props> = ({children}) => {
 			categories,
 			categoriesLoading,
 			games,
-			gamesLoading
+			gamesLoading,
+			chosenCategory,
+			setChosenCategory
 		}}>
 			{children}
 		</GameListContext.Provider>

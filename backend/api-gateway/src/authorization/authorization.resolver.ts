@@ -1,21 +1,27 @@
 import { Args, Context, Mutation, Query } from '@nestjs/graphql';
 import { RegisterDto } from './dto/register.dto';
 import { AuthorizationService } from './authorization.service';
-import { TestModel } from './models/test.model';
-import { UseFilters } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import ExceptionFilter from '../filters/exception.filter';
 import { LoginDto } from './dto/login.dto';
+import { UserModel } from './models/user.model';
+import { AuthGuard } from '../guards/auth.guard';
 
 @UseFilters(ExceptionFilter)
 export class AuthorizationResolver {
   constructor(private readonly authorizationService: AuthorizationService) {}
 
-  @Query(() => TestModel)
-  test(): TestModel {
+  @UseGuards(AuthGuard)
+  @Query(() => UserModel)
+  async user(@Context() context: any): Promise<UserModel> {
+    const userId = context.req.userId;
+
+    const user = await this.authorizationService.getUser(userId);
+
     return {
-      id: '123',
-      description: 'description',
-      test: true,
+      _id: context.req.userId,
+      balance: user.balance,
+      username: user.username,
     };
   }
 
@@ -32,8 +38,6 @@ export class AuthorizationResolver {
       try {
         context.rep.setCookie('token', response.access_token);
       } catch (e) {
-        console.error(e);
-
         return e;
       }
 

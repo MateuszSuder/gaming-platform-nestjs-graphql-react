@@ -1,9 +1,13 @@
 import {useLoginMutation} from "@/types/gql/graphql";
 import {useState} from "react";
+import useModal from "@/context/modalContext";
+import {RegisterModal} from "@/components/home/Register/RegisterModal";
 
 type Props = {};
 
 export default function Login(props: Props) {
+	const {addModal} = useModal();
+
 	const [credentials, setCredentials] =
 		useState<{ email: string; password: string }>({
 			email: "",
@@ -17,6 +21,8 @@ export default function Login(props: Props) {
 	});
 
 	const submit = () => login();
+
+	const openRegisterModal = () => addModal && addModal(<RegisterModal/>)
 
 	return (
 		<div className='absolute bottom-0 right-0 translate-y-full rounded drop-shadow-2xl min-w-[20rem]'>
@@ -52,7 +58,8 @@ export default function Login(props: Props) {
 					Login
 				</button>
 				<div className='text-[0.6rem] text-gray-300 text-center'>
-					Don’t have an account? <span className='font-bold text-white cursor-pointer hover:text-gray-200 duration-300'>Register an Account</span>
+					Don’t have an account? <span className='font-bold text-white cursor-pointer hover:text-gray-200 duration-300'
+					                             onClick={openRegisterModal}>Register an Account</span>
 				</div>
 			</div>
 		</div>

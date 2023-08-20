@@ -8,6 +8,7 @@ import {loadDevMessages, loadErrorMessages} from "@apollo/client/dev";
 import {__DEV__} from "@apollo/client/utilities/globals";
 import {GameListProvider} from "@/context/gameListContext";
 import {ModalProvider} from "@/context/modalContext";
+import {AuthProvider} from "@/context/authContext";
 
 export default function RootLayout({
 	                                   children,
@@ -23,15 +24,17 @@ export default function RootLayout({
 		<html lang="en">
 		<body className='bg-[url(/img/background_2x_exported.webp)] bg-no-repeat bg-cover overflow-x-hidden flex flex-col'>
 		<ApolloWrapperClient>
-			<ModalProvider>
-				<div className='max-w-7xl w-full m-auto relative'>
-					<Header/>
-					<GameListProvider>
-						<div>{children}</div>
-					</GameListProvider>
-				</div>
-				<div className='h-screen w-screen fixed bottom-0 bg-background-gradient -z-10'/>
-			</ModalProvider>
+			<AuthProvider>
+				<ModalProvider>
+					<div className='max-w-7xl w-full m-auto relative'>
+						<Header/>
+						<GameListProvider>
+							<div>{children}</div>
+						</GameListProvider>
+					</div>
+					<div className='h-screen w-screen fixed bottom-0 bg-background-gradient -z-10'/>
+				</ModalProvider>
+			</AuthProvider>
 		</ApolloWrapperClient>
 		</body>
 		</html>

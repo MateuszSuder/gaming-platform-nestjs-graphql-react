@@ -36,7 +36,17 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
   async init(userId: string) {
     const activeGame = await this.getActiveGame(userId);
 
-    if (activeGame) return JSON.stringify(activeGame);
+    if (activeGame) {
+      const { _id, win, bet, winningCard } = activeGame;
+
+      return {
+        ...this.getConfig(),
+        _id,
+        win,
+        bet,
+        winningCard,
+      };
+    }
 
     return this.getConfig();
   }
@@ -52,22 +62,38 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
         statusCode: HttpStatus.BAD_REQUEST,
       });
 
-    await this.balanceService.send('balance_add', -bet);
+    this.logger.log(`Sending balance add with amount ${-bet}`);
 
-    const { multiplier, drawnCard } = new ThreeCardsMonteTurn(cardNumber);
-    const win = bet * multiplier;
+    try {
+      const response = await firstValueFrom(
+        this.balanceService.send(
+          'balance_add',
+          JSON.stringify({ toAdd: -bet, userId }),
+        ),
+      );
 
-    const turn = new this.threeCardMonteModel({
-      userId,
-      bet,
-      multiplier,
-      startedAt: new Date(),
-      win,
-    });
+      console.log(response);
 
-    const { _id } = await turn.save();
+      const { multiplier, drawnCard } = new ThreeCardsMonteTurn(cardNumber);
+      const win = bet * multiplier;
 
-    return { _id, winningCard: drawnCard, win };
+      const turn = new this.threeCardMonteModel({
+        userId,
+        bet,
+        multiplier,
+        startedAt: new Date(),
+        win,
+        winningCard: drawnCard,
+      });
+
+      const { _id } = await turn.save();
+
+      return { _id, winningCard: drawnCard, win };
+    } catch (e) {
+      this.logger.error(e);
+
+      throw e;
+    }
   }
 
   async completeGame(completeGameInput: CompleteDto) {

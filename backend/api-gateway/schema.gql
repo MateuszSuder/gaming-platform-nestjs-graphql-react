@@ -26,6 +26,11 @@ type CategoryModel {
   label: String!
 }
 
+"""User's balance"""
+type UserBalanceModel {
+  balance: Float!
+}
+
 type Query {
   user: UserModel!
 
@@ -53,4 +58,8 @@ input RegisterDto {
 input LoginDto {
   email: String!
   password: String!
+}
+
+type Subscription {
+  userBalance: UserBalanceModel!
 }

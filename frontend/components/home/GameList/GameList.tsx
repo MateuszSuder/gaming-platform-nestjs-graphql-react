@@ -4,14 +4,17 @@ import React, {Fragment, useMemo} from 'react';
 import GameCard from "@/components/home/GameCard/GameCard";
 import useGameList from "@/context/gameListContext";
 import {Loading} from "@/components/common/Loading";
+import {useRouter} from "next/navigation";
 
 const gamesMap = {
 	1: {
-		src: '/img/three-card-monte.png'
+		src: '/img/three-card-monte.png',
+		path: '/game/three-card-monte'
 	}
 }
 
 const GameList = () => {
+	const router = useRouter();
 	const {games, gamesLoading, chosenCategory} = useGameList();
 
 	const filteredGames = useMemo(() => {
@@ -35,7 +38,11 @@ const GameList = () => {
 					<Fragment key={`game-${game.id}`}>
 						{
 							game.id in gamesMap && (
-								<GameCard src={gamesMap[game.id as keyof typeof gamesMap].src} name={game.name}/>
+								<GameCard
+									src={gamesMap[game.id as keyof typeof gamesMap].src}
+									name={game.name}
+									path={gamesMap[game.id as keyof typeof gamesMap].path}
+								/>
 							)
 						}
 					</Fragment>

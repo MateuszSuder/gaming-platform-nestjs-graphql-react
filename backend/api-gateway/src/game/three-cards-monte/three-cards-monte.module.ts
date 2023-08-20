@@ -18,7 +18,7 @@ import { CommandHandlers } from './commands/handlers';
           },
           consumer: {
             rebalanceTimeout: 1000,
-            groupId: `game-tcm-consumer`,
+            groupId: `game-consumer-tcm`,
           },
         },
       },

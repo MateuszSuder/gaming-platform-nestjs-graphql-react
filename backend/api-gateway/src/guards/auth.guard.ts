@@ -9,12 +9,13 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const context = GqlExecutionContext.create(ctx);
-    const request = context.getContext().req;
-    const token = request.cookies.token;
+    const { req, extra } = context.getContext();
+    // console.log('test', extra);
+    const token = extra?.token || req?.cookies?.token;
 
     const res = await this.commandBus.execute(new VerifyCommand(token));
 
-    request.userId = res.id;
+    req.userId = res.id;
 
     return !!res?.id;
   }

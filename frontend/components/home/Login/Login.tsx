@@ -2,10 +2,14 @@ import {useLoginMutation} from "@/types/gql/graphql";
 import {useState} from "react";
 import useModal from "@/context/modalContext";
 import {RegisterModal} from "@/components/home/Register/RegisterModal";
+import useAuth from "@/context/authContext";
 
-type Props = {};
+type Props = {
+	close: () => any;
+};
 
-export default function Login(props: Props) {
+export default function Login({close}: Props) {
+	const {refetchUser} = useAuth();
 	const {addModal} = useModal();
 
 	const [credentials, setCredentials] =
@@ -17,6 +21,10 @@ export default function Login(props: Props) {
 	const [login] = useLoginMutation({
 		variables: {
 			credentials
+		},
+		onCompleted: () => {
+			refetchUser && refetchUser();
+			close();
 		}
 	});
 

@@ -74,6 +74,17 @@ export type RegisterDto = {
   username: Scalars['String']['input'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  userBalance: UserBalanceModel;
+};
+
+/** User's balance */
+export type UserBalanceModel = {
+  __typename?: 'UserBalanceModel';
+  balance: Scalars['Float']['output'];
+};
+
 /** User return type */
 export type UserModel = {
   __typename?: 'UserModel';
@@ -110,6 +121,11 @@ export type GameListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GameListQuery = { __typename?: 'Query', gameList: Array<{ __typename?: 'GameModel', id: number, category: Category, name: string }> };
+
+export type UserBalanceSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserBalanceSubscription = { __typename?: 'Subscription', userBalance: { __typename?: 'UserBalanceModel', balance: number } };
 
 
 export const LoginDocument = gql`
@@ -280,3 +296,32 @@ export function useGameListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GameListQueryHookResult = ReturnType<typeof useGameListQuery>;
 export type GameListLazyQueryHookResult = ReturnType<typeof useGameListLazyQuery>;
 export type GameListQueryResult = Apollo.QueryResult<GameListQuery, GameListQueryVariables>;
+export const UserBalanceDocument = gql`
+    subscription userBalance {
+  userBalance {
+    balance
+  }
+}
+    `;
+
+/**
+ * __useUserBalanceSubscription__
+ *
+ * To run a query within a React component, call `useUserBalanceSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserBalanceSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserBalanceSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserBalanceSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UserBalanceSubscription, UserBalanceSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UserBalanceSubscription, UserBalanceSubscriptionVariables>(UserBalanceDocument, options);
+      }
+export type UserBalanceSubscriptionHookResult = ReturnType<typeof useUserBalanceSubscription>;
+export type UserBalanceSubscriptionResult = Apollo.SubscriptionResult<UserBalanceSubscription>;

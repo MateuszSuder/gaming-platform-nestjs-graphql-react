@@ -14,7 +14,7 @@ export class AuthorizationResolver {
   @UseGuards(AuthGuard)
   @Query(() => UserModel)
   async user(@Context() context: any): Promise<UserModel> {
-    const userId = context.req.userId;
+    const userId = context.req?.userId;
 
     const user = await this.authorizationService.getUser(userId);
 
@@ -36,6 +36,7 @@ export class AuthorizationResolver {
 
     if (response && response.access_token) {
       try {
+        console.log(context.rep);
         context.rep.setCookie('token', response.access_token);
       } catch (e) {
         return e;

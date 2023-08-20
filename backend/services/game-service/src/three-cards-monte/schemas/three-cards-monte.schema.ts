@@ -17,6 +17,9 @@ export class ThreeCardsMonte {
   win: number;
 
   @Prop({ required: true })
+  winningCard: number;
+
+  @Prop({ required: true })
   multiplier: number;
 }
 

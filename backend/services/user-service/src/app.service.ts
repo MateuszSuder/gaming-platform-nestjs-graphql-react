@@ -29,11 +29,15 @@ export class AppService {
 
   async getUser(userId: string) {
     this.logger.log(`Getting user with id ${userId}`);
-    const { userId: id, username } = await this.userModel.findOne({ userId });
+    try {
+      const { userId: id, username } = await this.userModel.findOne({ userId });
 
-    return {
-      id,
-      username,
-    };
+      return {
+        id,
+        username,
+      };
+    } catch (e) {
+      this.logger.error(e);
+    }
   }
 }

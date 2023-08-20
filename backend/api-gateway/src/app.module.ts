@@ -5,6 +5,7 @@ import { AuthorizationModule } from './authorization/authorization.module';
 import { GraphQLFormattedError } from 'graphql/error';
 import { ThreeCardsMonteModule } from './game/three-cards-monte/three-cards-monte.module';
 import { GameModule } from './game/game.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,9 +21,22 @@ import { GameModule } from './game/game.module';
           'request.credentials': 'include',
         },
       },
-      context: (req, rep) => ({ req, rep }),
+      subscriptions: {
+        'graphql-ws': {
+          onConnect: (context: any) => {
+            const { extra } = context;
+
+            extra.token = extra.request.headers.cookie
+              .split('; ')
+              .find((el) => el.includes('token='))
+              .split('=')[1];
+          },
+        },
+      },
+      context: ({ req, extra }, rep) => {
+        return { req, rep, extra };
+      },
       formatError: (formattedError) => {
-        console.log(formattedError);
         try {
           const error: GraphQLFormattedError = {
             message:
@@ -51,6 +65,7 @@ import { GameModule } from './game/game.module';
     }),
     ThreeCardsMonteModule,
     GameModule,
+    UserModule,
   ],
   providers: [],
 })

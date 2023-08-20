@@ -104,7 +104,7 @@ export class ThreeCardsMonteGateway implements OnGatewayConnection {
         new ThreeCardsMonteStartCommand(client.data.user.id, bet, cardNumber),
       );
 
-      return new GameWsResponse(Events.Init, initValue, HttpStatus.OK);
+      return new GameWsResponse(Events.Start, initValue, HttpStatus.OK);
     } catch (e) {
       const { message, statusCode } = e;
       return new GameWsException(message, statusCode, client);

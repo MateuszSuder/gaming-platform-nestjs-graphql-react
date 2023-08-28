@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import {FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
-import {socket} from "@/components/socketio/socket";
+import {threeCardsMonteSocket as socket} from "@/components/socketio/socket";
 import {
 	GameState,
 	ThreeCardsMonteInitMessage,
@@ -63,7 +63,7 @@ export default function ThreeCardMonte() {
 			socket.emit('init');
 		}
 	}, [gameState])
-	
+
 	function onInit({message}: ThreeCardsMonteInitMessage) {
 		setBets(message.bets);
 		setSelectedBet(message.bets[0]);
@@ -190,7 +190,6 @@ export default function ThreeCardMonte() {
 									onClick={gameState === GameState.Completed ? reset : onSubmit}
 									disabled={![GameState.Initiated, GameState.Completed].includes(gameState)}
 								>
-									{gameState}
 									{gameState === GameState.Completed ? 'Play again!' : 'Play!'}
 								</button>
 								<span className='text-sm mt-2 text-red-500'>{err ? 'Pick your card first' : ' '}</span>

@@ -6,6 +6,7 @@ import { GraphQLFormattedError } from 'graphql/error';
 import { ThreeCardsMonteModule } from './game/three-cards-monte/three-cards-monte.module';
 import { GameModule } from './game/game.module';
 import { UserModule } from './user/user.module';
+import { SevenFruitsModule } from './game/seven-fruits/seven-fruits.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { UserModule } from './user/user.module';
     ThreeCardsMonteModule,
     GameModule,
     UserModule,
+    SevenFruitsModule,
   ],
   providers: [],
 })

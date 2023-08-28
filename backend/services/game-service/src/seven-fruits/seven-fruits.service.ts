@@ -5,25 +5,24 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
-import { ConfigService } from '../config/config.service';
 import { IGameService } from '../interfaces/game-service';
+import { ConfigService } from '../config/config.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { ThreeCardsMonte } from './schemas/three-cards-monte.schema';
 import { Model } from 'mongoose';
-import { ThreeCardsMonteTurn } from './three-cards-monte-turn/three-cards-monte-turn';
 import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { SevenFruits } from './schemas/seven-fruits.schema';
+import { firstValueFrom } from 'rxjs';
+import { SevenFruitsSpin } from './classes/seven-fruits-spin';
 import { StartDto } from './dto/start.dto';
 import { CompleteDto } from './dto/complete.dto';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable()
-export class ThreeCardsMonteService implements IGameService, OnModuleInit {
-  private readonly logger = new Logger('Three cards monte service');
-
+export class SevenFruitsService implements IGameService, OnModuleInit {
+  private readonly logger = new Logger('777 Fruits service');
   constructor(
     private configService: ConfigService,
-    @InjectModel(ThreeCardsMonte.name)
-    private readonly threeCardMonteModel: Model<ThreeCardsMonte>,
+    @InjectModel(SevenFruits.name)
+    private readonly sevenFruitsModel: Model<SevenFruits>,
     @Inject('BALANCE_SERVICE') private readonly balanceService: ClientKafka,
   ) {}
 
@@ -32,31 +31,29 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
     this.balanceService.subscribeToResponseOf('balance_get');
     await this.balanceService.connect();
   }
-
   async init(userId: string) {
     const activeGame = await this.getActiveGame(userId);
 
     if (activeGame) {
-      const { _id, win, bet, winningCard } = activeGame;
+      const { _id, gameResult } = activeGame;
 
       return {
         ...this.getConfig(),
         _id,
-        win,
-        bet,
-        winningCard,
+        gameResult,
       };
     }
 
     return this.getConfig();
   }
 
-  async startGame({ userId, bet, cardNumber }: StartDto) {
+  async startGame({ userId, bet }: StartDto) {
     this.logger.log(`Got start for user ${userId} with bet ${bet}`);
+
     const activeGame = await this.getActiveGame(userId);
 
     if (activeGame) throw new RpcException('You have already started game');
-    if (!this.configService.getThreeCardsMonteConfig().bets.includes(bet))
+    if (!this.configService.getFruitsConfig().bets.includes(bet))
       throw new RpcException({
         message: 'Invalid bet',
         statusCode: HttpStatus.BAD_REQUEST,
@@ -72,21 +69,34 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
         ),
       );
 
-      const { multiplier, drawnCard } = new ThreeCardsMonteTurn(cardNumber);
-      const win = bet * multiplier;
-
-      const turn = new this.threeCardMonteModel({
-        userId,
+      const { symbols, multiplier, win, winningLines } = new SevenFruitsSpin(
         bet,
-        multiplier,
+      );
+
+      const turn = new this.sevenFruitsModel({
+        userId,
+        gameResult: {
+          win,
+          multiplier,
+          winningLines,
+          symbols,
+          bet,
+        },
         startedAt: new Date(),
-        win,
-        winningCard: drawnCard,
       });
 
       const { _id } = await turn.save();
 
-      return { _id, winningCard: drawnCard, win };
+      return {
+        _id,
+        gameResult: {
+          win,
+          multiplier,
+          winningLines,
+          symbols,
+          bet,
+        },
+      };
     } catch (e) {
       this.logger.error(e);
 
@@ -97,10 +107,10 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
   async completeGame(completeGameInput: CompleteDto) {
     const { userId, gameId } = completeGameInput;
     this.logger.log(`Got complete for user ${userId} for game ${gameId}`);
-    const gameObject = await this.threeCardMonteModel.findOne({
+
+    const gameObject = await this.sevenFruitsModel.findOne({
       _id: gameId,
       userId,
-      isCompleted: false,
     });
 
     if (!gameObject)
@@ -109,11 +119,13 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
         statusCode: HttpStatus.NOT_FOUND,
       });
 
-    const { win } = gameObject;
+    const {
+      gameResult: { win },
+    } = gameObject;
 
     try {
-      await this.threeCardMonteModel.updateOne(
-        { _id: gameObject._id },
+      await this.sevenFruitsModel.updateOne(
+        { _id: gameObject._id, userId },
         { isCompleted: true },
       );
 
@@ -135,7 +147,7 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
   }
 
   private async getActiveGame(userId: string) {
-    return this.threeCardMonteModel.findOne({ userId, isCompleted: false });
+    return this.sevenFruitsModel.findOne({ userId, isCompleted: false });
   }
 
   private getConfig() {

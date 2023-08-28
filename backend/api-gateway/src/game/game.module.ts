@@ -4,6 +4,7 @@ import { GameResolver } from './game.resolver';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GameCommandHandlers } from './commands/handlers';
+import { SevenFruitsModule } from './seven-fruits/seven-fruits.module';
 
 @Module({
   controllers: [],
@@ -26,6 +27,7 @@ import { GameCommandHandlers } from './commands/handlers';
         },
       },
     ]),
+    SevenFruitsModule,
   ],
 })
 export class GameModule {}

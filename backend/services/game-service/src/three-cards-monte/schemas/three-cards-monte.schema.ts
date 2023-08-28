@@ -21,6 +21,9 @@ export class ThreeCardsMonte {
 
   @Prop({ required: true })
   multiplier: number;
+
+  @Prop({ required: false, default: false })
+  isCompleted: boolean;
 }
 
 export const ThreeCardsMonteSchema =

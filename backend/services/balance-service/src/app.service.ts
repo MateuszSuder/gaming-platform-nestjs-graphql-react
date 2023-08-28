@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
@@ -36,6 +36,14 @@ export class AppService {
     );
 
     const { userId, toAdd } = addBalanceInput;
+
+    if (toAdd < 0) {
+      const userBalance = await this.userModel.findOne({ userId });
+
+      if (userBalance.balance + toAdd < 0) {
+        throw new RpcException('Balance is too low');
+      }
+    }
     const userModel = await this.userModel.findOneAndUpdate(
       { userId },
       {

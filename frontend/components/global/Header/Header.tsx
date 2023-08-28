@@ -4,8 +4,8 @@ import Login from "@/components/home/Login/Login";
 import {useEffect, useRef, useState} from "react";
 import {UserAvatar} from "@/components/common/UserAvatar";
 import {UserMenu} from "@/components/global/Header/UserMenu/UserMenu";
-import useAuth from "@/context/authContext";
 import {Loading} from "@/components/common/Loading";
+import useAuth from "@/context/authContext";
 
 type Props = {};
 

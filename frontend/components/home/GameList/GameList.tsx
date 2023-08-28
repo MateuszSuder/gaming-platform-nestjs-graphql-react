@@ -4,17 +4,19 @@ import React, {Fragment, useMemo} from 'react';
 import GameCard from "@/components/home/GameCard/GameCard";
 import useGameList from "@/context/gameListContext";
 import {Loading} from "@/components/common/Loading";
-import {useRouter} from "next/navigation";
 
 const gamesMap = {
 	1: {
 		src: '/img/three-card-monte.png',
 		path: '/game/three-card-monte'
+	},
+	2: {
+		src: '/img/slot-machine.png',
+		path: '/game/777-fruits'
 	}
 }
 
 const GameList = () => {
-	const router = useRouter();
 	const {games, gamesLoading, chosenCategory} = useGameList();
 
 	const filteredGames = useMemo(() => {

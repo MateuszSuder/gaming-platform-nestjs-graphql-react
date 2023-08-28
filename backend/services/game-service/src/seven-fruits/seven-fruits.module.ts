@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ThreeCardsMonteController } from './three-cards-monte.controller';
-import { ThreeCardsMonteService } from './three-cards-monte.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { SevenFruits, SevenFruitsSchema } from './schemas/seven-fruits.schema';
 import { ConfigModule } from '../config/config.module';
-import {
-  ThreeCardsMonte,
-  ThreeCardsMonteSchema,
-} from './schemas/three-cards-monte.schema';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { SevenFruitsController } from './seven-fruits.controller';
+import { SevenFruitsService } from './seven-fruits.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://mongo-game:27017', {
+    MongooseModule.forRoot('mongodb://mongo-game:27017/seven-fruits', {
       auth: {
         username: process.env.MONGO_USERNAME,
         password: process.env.MONGO_PASSWORD,
@@ -20,8 +17,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     }),
     MongooseModule.forFeature([
       {
-        name: ThreeCardsMonte.name,
-        schema: ThreeCardsMonteSchema,
+        name: SevenFruits.name,
+        schema: SevenFruitsSchema,
       },
     ]),
     ConfigModule,
@@ -36,13 +33,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           },
           consumer: {
             rebalanceTimeout: 1000,
-            groupId: `balance-consumer-tcm`,
+            groupId: `balance-consumer-fruits`,
           },
         },
       },
     ]),
   ],
-  controllers: [ThreeCardsMonteController],
-  providers: [ThreeCardsMonteService],
+  controllers: [SevenFruitsController],
+  providers: [SevenFruitsService],
 })
-export class ThreeCardsMonteModule {}
+export class SevenFruitsModule {}

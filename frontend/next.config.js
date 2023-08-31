@@ -9,6 +9,9 @@ const nextConfig = {
             aggregateTimeout: 300,
         }
         return config
+    },
+    images: {
+        unoptimized: true
     }
 }
 

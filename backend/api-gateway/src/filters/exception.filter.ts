@@ -19,6 +19,7 @@ export default class ExceptionFilter implements GqlExceptionFilter {
     this.logger.error(exception);
     let errorCode =
       exception.error?.status || exception.statusCode || exception.status;
+    this.logger.error(errorCode);
 
     if (exception instanceof BadRequestException) errorCode = 400;
 

@@ -181,6 +181,7 @@ export const SevenFruitsProvider: FunctionComponent<Props> = ({children}) => {
 		}
 
 		return () => {
+			setIsConnected(false);
 			socket.off('connect', onConnect);
 			socket.off('disconnect', onDisconnect);
 			socket.off('init', onInit);

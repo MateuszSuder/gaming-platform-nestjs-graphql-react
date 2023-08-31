@@ -82,6 +82,9 @@ type Mutation {
 
   """Login mutation"""
   login(login: LoginDto!): Boolean!
+
+  """Logout mutation"""
+  logout: Boolean!
 }
 
 input RegisterDto {

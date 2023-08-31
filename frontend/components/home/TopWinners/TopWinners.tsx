@@ -9,8 +9,10 @@ type Props = {};
 export default function TopWinners(props: Props) {
 	const {data, loading} = useTopWinsQuery();
 
-	const highestWins = (data?.topWins.topWins || []).sort((a, b) => b.win - a.win);
-	const highestXWins = (data?.topWins.topMultipliers || []).sort((a, b) => b.multiplier - a.multiplier);
+	console.log(data?.topWins.topWins)
+
+	const highestWins = ([...(data?.topWins.topWins || [])]).sort((a, b) => b.win - a.win);
+	const highestXWins = ([...(data?.topWins.topMultipliers || [])]).sort((a, b) => b.multiplier - a.multiplier);
 
 	return (
 		<div className='grid grid-cols-2 gap-5 my-10'>

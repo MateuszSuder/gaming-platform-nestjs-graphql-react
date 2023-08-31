@@ -38,12 +38,19 @@ export class AuthorizationResolver {
       try {
         context.rep.setCookie('token', response.access_token);
       } catch (e) {
-        return e;
+        console.log(e);
+        throw e;
       }
 
       return true;
     }
 
     throw response;
+  }
+
+  @Mutation(() => Boolean, { description: 'Logout mutation' })
+  logout(@Context() context: any) {
+    context.rep.clearCookie('token');
+    return true;
   }
 }

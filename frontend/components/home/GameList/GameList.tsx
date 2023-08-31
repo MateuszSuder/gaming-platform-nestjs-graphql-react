@@ -11,7 +11,7 @@ const gamesMap = {
 		path: '/game/three-card-monte'
 	},
 	2: {
-		src: '/img/slot-machine.png',
+		src: '/img/seven-fruits.png',
 		path: '/game/777-fruits'
 	},
 	3: {

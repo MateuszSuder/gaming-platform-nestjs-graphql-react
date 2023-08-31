@@ -51,7 +51,9 @@ export class AppService {
 
     if (!user) {
       this.logger.log(`[]: User incorrect credentials [1]`);
-      return new UnauthorizedException('Incorrect email or password');
+      throw new RpcException(
+        new UnauthorizedException('Incorrect email or password'),
+      );
     }
     if (
       await argon2.verify(user.password, `${userPassword}${process.env.PEPPER}`)

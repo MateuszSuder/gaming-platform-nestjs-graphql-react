@@ -31,6 +31,93 @@ export class SevenFruitsService implements IGameService, OnModuleInit {
     this.balanceService.subscribeToResponseOf('balance_get');
     await this.balanceService.connect();
   }
+
+  async getHighestWins(): Promise<{
+    topWins: {
+      win: number;
+      userId: string;
+      multiplier: number;
+      game: 'Three-card monte';
+    }[];
+    topX: {
+      win: number;
+      userId: string;
+      multiplier: number;
+      game: 'Three-card monte';
+    }[];
+  }> {
+    const topWins = await this.sevenFruitsModel.aggregate([
+      {
+        $match: {
+          'gameResult.win': { $gt: 0 },
+          isCompleted: true,
+        },
+      },
+      {
+        $project: {
+          win: '$gameResult.win',
+          multiplier: '$gameResult.multiplier',
+          userId: 1,
+          game: '777 Fruits',
+        },
+      },
+      {
+        $sort: {
+          win: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    const topX = await this.sevenFruitsModel.aggregate([
+      {
+        $match: {
+          'gameResult.win': { $gt: 0 },
+          isCompleted: true,
+        },
+      },
+      {
+        $project: {
+          win: '$gameResult.win',
+          multiplier: '$gameResult.multiplier',
+          userId: 1,
+          game: '777 Fruits',
+        },
+      },
+      {
+        $sort: {
+          multiplier: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    return {
+      topWins,
+      topX,
+    };
+  }
+
+  async getGameHistory(userId: string) {
+    return this.sevenFruitsModel.find(
+      {
+        userId,
+        isCompleted: true,
+      },
+      {
+        game: '777 Fruits',
+        win: '$gameResult.win',
+        multiplier: '$gameResult.multiplier',
+        bet: '$gameResult.bet',
+        createdAt: 1,
+      },
+    );
+  }
+
   async init(userId: string) {
     const activeGame = await this.getActiveGame(userId);
 
@@ -111,6 +198,7 @@ export class SevenFruitsService implements IGameService, OnModuleInit {
     const gameObject = await this.sevenFruitsModel.findOne({
       _id: gameId,
       userId,
+      isCompleted: false,
     });
 
     if (!gameObject)

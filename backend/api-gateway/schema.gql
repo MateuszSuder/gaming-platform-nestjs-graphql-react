@@ -26,6 +26,34 @@ type CategoryModel {
   label: String!
 }
 
+"""Top win type"""
+type TopWinModel {
+  username: String!
+  game: String!
+  multiplier: Float!
+  win: Float!
+}
+
+"""Top wins return type"""
+type TopWinsModel {
+  topWins: [TopWinModel!]!
+  topMultipliers: [TopWinModel!]!
+}
+
+"""Top win type"""
+type HistoryModel {
+  game: String!
+  multiplier: Float!
+  win: Float!
+  bet: Float!
+  createdAt: String!
+}
+
+"""Top wins return type"""
+type GameHistoryModel {
+  history: [HistoryModel!]!
+}
+
 """User's balance"""
 type UserBalanceModel {
   balance: Float!
@@ -39,6 +67,13 @@ type Query {
 
   """Returns list of categories"""
   categoryList: [CategoryModel!]!
+  topWins: TopWinsModel!
+  gameHistory(historyInput: GameHistoryDto!): GameHistoryModel!
+}
+
+input GameHistoryDto {
+  limit: Float!
+  offset: Float!
 }
 
 type Mutation {

@@ -20,7 +20,6 @@ export const SevenFruits: FunctionComponent<Props> = memo(({width, height}) => {
 
 	return (
 		<div className='relative w-full h-full'>
-			{gameState}
 			<Stage {...{width, height: height - bottomBarHeight}} options={{backgroundAlpha: 0}}>
 				<Symbols
 					width={width}

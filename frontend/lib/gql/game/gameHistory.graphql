@@ -1,0 +1,11 @@
+query gameHistory($historyInput: GameHistoryDto!) {
+    gameHistory(historyInput: $historyInput) {
+        history {
+            bet
+            createdAt
+            game
+            multiplier
+            win
+        }
+    }
+}

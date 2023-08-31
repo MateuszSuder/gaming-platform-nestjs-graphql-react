@@ -25,7 +25,8 @@ module.exports = {
             },
             gridTemplateColumns: {
                 'app': '1fr 2fr 1fr',
-                'main': '1fr 2fr 1fr'
+                'main': '1fr 3fr',
+                'history': '2fr 1.5fr 1fr 1fr 1fr'
             },
             dropShadow: {
                 'header': '1px 1px 2px rgba(156, 138, 40, 1)',

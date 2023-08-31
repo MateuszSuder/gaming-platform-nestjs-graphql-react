@@ -44,5 +44,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   ],
   controllers: [ThreeCardsMonteController],
   providers: [ThreeCardsMonteService],
+  exports: [ThreeCardsMonteService],
 })
 export class ThreeCardsMonteModule {}

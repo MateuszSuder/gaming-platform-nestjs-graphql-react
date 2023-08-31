@@ -15,7 +15,6 @@ export class LoginHandler
   ) {}
 
   async onModuleInit() {
-    console.log('init log');
     this.authClient.subscribeToResponseOf('auth_login');
     await this.authClient.connect();
   }

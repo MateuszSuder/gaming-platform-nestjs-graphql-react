@@ -5,6 +5,47 @@ export enum GameState {
 	Completed
 }
 
+export enum PlinkoDirection {
+	Left = 'LEFT',
+	Right = 'RIGHT',
+}
+
+export type PlinkoCompleteInput = {
+	gameId: string,
+}
+
+export type PlinkoStartInput = {
+	bet: number,
+}
+
+type PlinkoCompleteMessageData = {
+	balance: number;
+}
+
+export type PlinkoCompleteMessage = ISocketMessage<PlinkoCompleteMessageData>;
+
+type PlinkoStartMessageData = {
+	_id: string,
+	bet: number,
+	win: number,
+	multiplier: number,
+	pattern: PlinkoDirection[]
+}
+
+export type PlinkoStartMessage = ISocketMessage<PlinkoStartMessageData>;
+
+type PlinkoInitMessageData = {
+	_id: string,
+	bets: number[],
+	multipliers: number[],
+	bet?: number,
+	win?: number,
+	multiplier?: number,
+	pattern?: PlinkoDirection[]
+}
+
+export type PlinkoInitMessage = ISocketMessage<PlinkoInitMessageData>;
+
 export type SevenFruitsCompleteInput = {
 	gameId: string,
 }

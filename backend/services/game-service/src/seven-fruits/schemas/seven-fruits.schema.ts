@@ -33,6 +33,9 @@ export class SevenFruits {
 
   @Prop({ required: false, default: false })
   isCompleted: boolean;
+
+  @Prop({ required: false })
+  createdAt: string;
 }
 
 export const SevenFruitsSchema = SchemaFactory.createForClass(SevenFruits);

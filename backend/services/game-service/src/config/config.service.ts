@@ -22,6 +22,11 @@ export enum FruitsSlotSymbol {
   BANANA = 'Banana',
 }
 
+export enum PlinkoDirection {
+  Left = 'LEFT',
+  Right = 'RIGHT',
+}
+
 export const FruitsSlotSymbolPayouts: Record<
   FruitsSlotSymbol,
   Pick<ISlotSymbol, 'payouts' | 'chance'>
@@ -31,7 +36,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 1000,
+        multiplier: 150,
       },
     ],
   },
@@ -40,7 +45,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 300,
+        multiplier: 50,
       },
     ],
   },
@@ -49,7 +54,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 100,
+        multiplier: 30,
       },
     ],
   },
@@ -58,7 +63,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 50,
+        multiplier: 20,
       },
     ],
   },
@@ -67,7 +72,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 35,
+        multiplier: 7.5,
       },
     ],
   },
@@ -76,7 +81,7 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 12,
+        multiplier: 2.5,
       },
     ],
   },
@@ -85,14 +90,20 @@ export const FruitsSlotSymbolPayouts: Record<
     payouts: [
       {
         quantity: 3,
-        multiplier: 3,
+        multiplier: 1,
       },
     ],
   },
 };
 
+export const PlinkoMultipliers = [13, 3, 1.3, 0.7, 0.4];
+
 export interface IBaseConfig {
   bets: number[];
+}
+
+export interface IPlinkoConfig extends IBaseConfig {
+  multipliers: number[];
 }
 
 export interface IPayout {
@@ -144,6 +155,11 @@ export class ConfigService {
         name: '777 Fruits',
         category: Category.SLOT,
       },
+      {
+        id: 3,
+        name: 'Plinko',
+        category: Category.OTHER,
+      },
     ];
   }
   getThreeCardsMonteConfig(): IBaseConfig {
@@ -166,6 +182,13 @@ export class ConfigService {
     return {
       bets: [1, 2, 4, 5, 10, 15, 20, 25, 50, 100],
       symbols: this.getFruitsSymbols(),
+    };
+  }
+
+  getPlinkoConfig(): IPlinkoConfig {
+    return {
+      bets: [1, 2, 4, 5, 10, 15, 20, 25, 50, 100],
+      multipliers: PlinkoMultipliers,
     };
   }
 }

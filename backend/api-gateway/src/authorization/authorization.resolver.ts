@@ -36,7 +36,6 @@ export class AuthorizationResolver {
 
     if (response && response.access_token) {
       try {
-        console.log(context.rep);
         context.rep.setCookie('token', response.access_token);
       } catch (e) {
         return e;

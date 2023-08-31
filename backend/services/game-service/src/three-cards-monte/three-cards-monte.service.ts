@@ -33,6 +33,82 @@ export class ThreeCardsMonteService implements IGameService, OnModuleInit {
     await this.balanceService.connect();
   }
 
+  async getHighestWins(): Promise<{
+    topWins: {
+      win: number;
+      userId: string;
+      multiplier: number;
+      game: 'Three-card monte';
+    }[];
+    topX: {
+      win: number;
+      userId: string;
+      multiplier: number;
+      game: 'Three-card monte';
+    }[];
+  }> {
+    const topWins = await this.threeCardMonteModel.aggregate([
+      {
+        $project: {
+          win: 1,
+          userId: 1,
+          multiplier: 1,
+          game: 'Three-card monte',
+        },
+      },
+      {
+        $match: { win: { $gt: 0 } },
+      },
+      {
+        $sort: { win: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    const topX = await this.threeCardMonteModel.aggregate([
+      {
+        $project: {
+          win: 1,
+          userId: 1,
+          multiplier: 1,
+          game: 'Three-card monte',
+        },
+      },
+      {
+        $match: { win: { $gt: 0 } },
+      },
+      {
+        $sort: { multiplier: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    return {
+      topWins,
+      topX,
+    };
+  }
+
+  async getGameHistory(userId: string) {
+    return this.threeCardMonteModel.find(
+      {
+        userId,
+        isCompleted: true,
+      },
+      {
+        game: 'Three-card monte',
+        win: 1,
+        multiplier: 1,
+        bet: 1,
+        createdAt: 1,
+      },
+    );
+  }
+
   async init(userId: string) {
     const activeGame = await this.getActiveGame(userId);
 

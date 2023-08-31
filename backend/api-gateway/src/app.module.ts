@@ -7,6 +7,7 @@ import { ThreeCardsMonteModule } from './game/three-cards-monte/three-cards-mont
 import { GameModule } from './game/game.module';
 import { UserModule } from './user/user.module';
 import { SevenFruitsModule } from './game/seven-fruits/seven-fruits.module';
+import { PlinkoModule } from './game/plinko/plinko.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { SevenFruitsModule } from './game/seven-fruits/seven-fruits.module';
     GameModule,
     UserModule,
     SevenFruitsModule,
+    PlinkoModule,
   ],
   providers: [],
 })

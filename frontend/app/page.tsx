@@ -1,4 +1,3 @@
-import LastWinners from "@/components/home/LastWinners/LastWinners";
 import Categories from "@/components/home/Categories/Categories";
 import TopWinners from "@/components/home/TopWinners/TopWinners";
 import GameList from "@/components/home/GameList/GameList";
@@ -14,9 +13,6 @@ export default async function Home() {
 					<Categories/>
 				</div>
 				<GameList/>
-				<div>
-					<LastWinners/>
-				</div>
 			</div>
 		</>
 	);

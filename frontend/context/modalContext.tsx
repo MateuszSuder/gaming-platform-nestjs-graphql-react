@@ -25,6 +25,7 @@ export const ModalProvider: FunctionComponent<Props> = ({children}) => {
 
 	return (
 		<ModalContext.Provider value={{addModal, close}}>
+			{children}
 			{
 				modal && (
 					<>
@@ -37,7 +38,6 @@ export const ModalProvider: FunctionComponent<Props> = ({children}) => {
 					</>
 				)
 			}
-			{children}
 		</ModalContext.Provider>
 	)
 }

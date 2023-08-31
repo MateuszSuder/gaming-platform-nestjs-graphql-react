@@ -8,7 +8,7 @@ import { SevenFruitsService } from './seven-fruits.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://mongo-game:27017/seven-fruits', {
+    MongooseModule.forRoot('mongodb://mongo-game:27017/', {
       auth: {
         username: process.env.MONGO_USERNAME,
         password: process.env.MONGO_PASSWORD,
@@ -41,5 +41,6 @@ import { SevenFruitsService } from './seven-fruits.service';
   ],
   controllers: [SevenFruitsController],
   providers: [SevenFruitsService],
+  exports: [SevenFruitsService],
 })
 export class SevenFruitsModule {}

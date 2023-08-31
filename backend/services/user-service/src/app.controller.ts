@@ -20,7 +20,6 @@ export class AppController {
 
   @MessagePattern('user_get')
   async getUser(user: { userId: string }) {
-    console.log(user.userId);
     return await this.appService.getUser(user.userId);
   }
 }

@@ -13,6 +13,10 @@ const gamesMap = {
 	2: {
 		src: '/img/slot-machine.png',
 		path: '/game/777-fruits'
+	},
+	3: {
+		src: '/img/plinko.png',
+		path: '/game/plinko'
 	}
 }
 
@@ -34,7 +38,7 @@ const GameList = () => {
 	if (!games.length) return (<div className='grid grid-cols-2 justify-center gap-10'>No games found</div>);
 
 	return (
-		<div className='grid grid-cols-2 justify-center gap-10'>
+		<div className='grid grid-cols-3 justify-center gap-10'>
 			{
 				filteredGames.map((game) => (
 					<Fragment key={`game-${game.id}`}>

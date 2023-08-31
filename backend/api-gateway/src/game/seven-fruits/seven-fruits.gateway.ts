@@ -44,7 +44,6 @@ export class SevenFruitsGateway implements OnGatewayConnection {
   constructor(private readonly commandBus: CommandBus) {}
 
   async handleConnection(client: Socket, ...args: any[]) {
-    console.log('handling connection...');
     const token = parse(client.handshake.headers.cookie).token;
     if (!token)
       return new GameWsException(
@@ -54,17 +53,11 @@ export class SevenFruitsGateway implements OnGatewayConnection {
         true,
       );
 
-    console.log('token', token);
-
     try {
-      const data = await this.commandBus.execute(new VerifyCommand(token));
-
-      client.data.user = data;
-
-      console.log('client.data.user');
-      console.log(client.data.user);
+      client.data.user = await this.commandBus.execute(
+        new VerifyCommand(token),
+      );
     } catch (e) {
-      console.error('error');
       return new GameWsException(
         'Unauthorized',
         HttpStatus.UNAUTHORIZED,

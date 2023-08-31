@@ -3,6 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import useAuth from "@/context/authContext";
 import useSevenFruits from "@/context/sevenFruitsContext";
+import {GameState} from "@/types/socketio";
 
 type Props = {};
 export const BottomBar: FunctionComponent<Props> = () => {
@@ -17,6 +18,7 @@ export const BottomBar: FunctionComponent<Props> = () => {
 	}
 
 	const onSpin = () => {
+		if (gameState === GameState.Started) return;
 		start && start();
 	}
 
@@ -27,7 +29,7 @@ export const BottomBar: FunctionComponent<Props> = () => {
 			<div
 				className='flex justify-center items-center text-secondary-light text-2xl border-b-1 border-b-secondary-light pb-2'>
 				<div>
-					Last win: {(win || 0).toLocaleString('pl-PL', {
+					Last win: {((gameState === GameState.Completed) ? win : 0).toLocaleString('pl-PL', {
 					minimumFractionDigits: 2,
 					maximumFractionDigits: 2
 				})}
@@ -51,7 +53,7 @@ export const BottomBar: FunctionComponent<Props> = () => {
 				</div>
 				<div className='flex items-center'>
 					<div
-						className='border-1 border-secondary-light drop-shadow-header px-5 py-2 font-bold rounded-sm cursor-pointer hover:scale-105 duration-300'
+						className={`border-1 border-secondary-light drop-shadow-header px-5 py-2 font-bold rounded-sm duration-300 select-none ${(gameState === GameState.Started) ? `grayscale` : 'cursor-pointer hover:scale-105'}`}
 						onClick={onSpin}
 					>
 						SPIN

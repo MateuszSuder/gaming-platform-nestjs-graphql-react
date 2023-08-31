@@ -67,8 +67,22 @@ export class ThreeCardsMonteGateway implements OnGatewayConnection {
     }
   }
 
+  async waitForAuth(client: Socket, retries: number) {
+    if (!client.data.user?.id && retries) {
+      await new Promise((r) => setTimeout(r, 1000));
+
+      this.logger.warn(`No user found, retrying... Retries left: ${retries}`);
+
+      --retries;
+
+      await this.waitForAuth(client, retries);
+    }
+  }
+
   @SubscribeMessage(Events.Init)
   async init(@ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
+    await this.waitForAuth(client, 3);
+
     this.logger.log(`Got init for ${client.data.user.id}`);
 
     try {
@@ -88,6 +102,8 @@ export class ThreeCardsMonteGateway implements OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() startInput: StartDto,
   ): Promise<WsResponse<any> | GameWsException> {
+    await this.waitForAuth(client, 3);
+
     const { bet, cardNumber } = startInput;
 
     this.logger.log(
@@ -111,6 +127,8 @@ export class ThreeCardsMonteGateway implements OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() completeInput: CompleteDto,
   ): Promise<GameWsResponse | GameWsException> {
+    await this.waitForAuth(client, 3);
+
     const { gameId } = completeInput;
     const userId = client.data.user.id;
 

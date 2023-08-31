@@ -1,0 +1,14 @@
+query topWins {
+    topWins {
+        topWins {
+            win
+            username
+            game
+        }
+        topMultipliers {
+            multiplier
+            username
+            game
+        }
+    }
+}

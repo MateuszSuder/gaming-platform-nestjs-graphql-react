@@ -29,11 +29,32 @@ export type CategoryModel = {
   label: Scalars['String']['output'];
 };
 
+export type GameHistoryDto = {
+  limit: Scalars['Float']['input'];
+  offset: Scalars['Float']['input'];
+};
+
+/** Top wins return type */
+export type GameHistoryModel = {
+  __typename?: 'GameHistoryModel';
+  history: Array<HistoryModel>;
+};
+
 export type GameModel = {
   __typename?: 'GameModel';
   category: Category | '%future added value';
   id: Scalars['Float']['output'];
   name: Scalars['String']['output'];
+};
+
+/** Top win type */
+export type HistoryModel = {
+  __typename?: 'HistoryModel';
+  bet: Scalars['Float']['output'];
+  createdAt: Scalars['String']['output'];
+  game: Scalars['String']['output'];
+  multiplier: Scalars['Float']['output'];
+  win: Scalars['Float']['output'];
 };
 
 export type LoginDto = {
@@ -63,9 +84,16 @@ export type Query = {
   __typename?: 'Query';
   /** Returns list of categories */
   categoryList: Array<CategoryModel>;
+  gameHistory: GameHistoryModel;
   /** Returns list of games with ids */
   gameList: Array<GameModel>;
+  topWins: TopWinsModel;
   user: UserModel;
+};
+
+
+export type QueryGameHistoryArgs = {
+  historyInput: GameHistoryDto;
 };
 
 export type RegisterDto = {
@@ -77,6 +105,22 @@ export type RegisterDto = {
 export type Subscription = {
   __typename?: 'Subscription';
   userBalance: UserBalanceModel;
+};
+
+/** Top win type */
+export type TopWinModel = {
+  __typename?: 'TopWinModel';
+  game: Scalars['String']['output'];
+  multiplier: Scalars['Float']['output'];
+  username: Scalars['String']['output'];
+  win: Scalars['Float']['output'];
+};
+
+/** Top wins return type */
+export type TopWinsModel = {
+  __typename?: 'TopWinsModel';
+  topMultipliers: Array<TopWinModel>;
+  topWins: Array<TopWinModel>;
 };
 
 /** User's balance */
@@ -117,10 +161,22 @@ export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CategoryListQuery = { __typename?: 'Query', categoryList: Array<{ __typename?: 'CategoryModel', id: Category, label: string }> };
 
+export type GameHistoryQueryVariables = Exact<{
+  historyInput: GameHistoryDto;
+}>;
+
+
+export type GameHistoryQuery = { __typename?: 'Query', gameHistory: { __typename?: 'GameHistoryModel', history: Array<{ __typename?: 'HistoryModel', bet: number, createdAt: string, game: string, multiplier: number, win: number }> } };
+
 export type GameListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GameListQuery = { __typename?: 'Query', gameList: Array<{ __typename?: 'GameModel', id: number, category: Category, name: string }> };
+
+export type TopWinsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TopWinsQuery = { __typename?: 'Query', topWins: { __typename?: 'TopWinsModel', topWins: Array<{ __typename?: 'TopWinModel', win: number, username: string, game: string }>, topMultipliers: Array<{ __typename?: 'TopWinModel', multiplier: number, username: string, game: string }> } };
 
 export type UserBalanceSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -260,6 +316,47 @@ export function useCategoryListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type CategoryListQueryHookResult = ReturnType<typeof useCategoryListQuery>;
 export type CategoryListLazyQueryHookResult = ReturnType<typeof useCategoryListLazyQuery>;
 export type CategoryListQueryResult = Apollo.QueryResult<CategoryListQuery, CategoryListQueryVariables>;
+export const GameHistoryDocument = gql`
+    query gameHistory($historyInput: GameHistoryDto!) {
+  gameHistory(historyInput: $historyInput) {
+    history {
+      bet
+      createdAt
+      game
+      multiplier
+      win
+    }
+  }
+}
+    `;
+
+/**
+ * __useGameHistoryQuery__
+ *
+ * To run a query within a React component, call `useGameHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGameHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGameHistoryQuery({
+ *   variables: {
+ *      historyInput: // value for 'historyInput'
+ *   },
+ * });
+ */
+export function useGameHistoryQuery(baseOptions: Apollo.QueryHookOptions<GameHistoryQuery, GameHistoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GameHistoryQuery, GameHistoryQueryVariables>(GameHistoryDocument, options);
+      }
+export function useGameHistoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GameHistoryQuery, GameHistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GameHistoryQuery, GameHistoryQueryVariables>(GameHistoryDocument, options);
+        }
+export type GameHistoryQueryHookResult = ReturnType<typeof useGameHistoryQuery>;
+export type GameHistoryLazyQueryHookResult = ReturnType<typeof useGameHistoryLazyQuery>;
+export type GameHistoryQueryResult = Apollo.QueryResult<GameHistoryQuery, GameHistoryQueryVariables>;
 export const GameListDocument = gql`
     query gameList {
   gameList {
@@ -296,6 +393,49 @@ export function useGameListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GameListQueryHookResult = ReturnType<typeof useGameListQuery>;
 export type GameListLazyQueryHookResult = ReturnType<typeof useGameListLazyQuery>;
 export type GameListQueryResult = Apollo.QueryResult<GameListQuery, GameListQueryVariables>;
+export const TopWinsDocument = gql`
+    query topWins {
+  topWins {
+    topWins {
+      win
+      username
+      game
+    }
+    topMultipliers {
+      multiplier
+      username
+      game
+    }
+  }
+}
+    `;
+
+/**
+ * __useTopWinsQuery__
+ *
+ * To run a query within a React component, call `useTopWinsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopWinsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopWinsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTopWinsQuery(baseOptions?: Apollo.QueryHookOptions<TopWinsQuery, TopWinsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TopWinsQuery, TopWinsQueryVariables>(TopWinsDocument, options);
+      }
+export function useTopWinsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopWinsQuery, TopWinsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TopWinsQuery, TopWinsQueryVariables>(TopWinsDocument, options);
+        }
+export type TopWinsQueryHookResult = ReturnType<typeof useTopWinsQuery>;
+export type TopWinsLazyQueryHookResult = ReturnType<typeof useTopWinsLazyQuery>;
+export type TopWinsQueryResult = Apollo.QueryResult<TopWinsQuery, TopWinsQueryVariables>;
 export const UserBalanceDocument = gql`
     subscription userBalance {
   userBalance {

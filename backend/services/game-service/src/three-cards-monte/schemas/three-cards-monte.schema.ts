@@ -24,6 +24,9 @@ export class ThreeCardsMonte {
 
   @Prop({ required: false, default: false })
   isCompleted: boolean;
+
+  @Prop({ required: false })
+  createdAt: string;
 }
 
 export const ThreeCardsMonteSchema =

@@ -34,7 +34,6 @@ export class UserService implements OnModuleInit {
   }
 
   async handleUserBalanceChanged({ userId, balance }) {
-    console.log(userId, balance);
     await balanceResolverPubSub.publish('balanceUpdated', {
       userBalance: { userId, balance },
     });

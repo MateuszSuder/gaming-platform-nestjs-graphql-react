@@ -106,8 +106,10 @@ export default function ThreeCardMonte() {
 			setIsConnected(false);
 		}
 
+		console.log(socket.connected);
+		console.log(isConnected);
 
-		!isConnected && socket.connect();
+		!socket.connected && socket.connect();
 
 		socket.on('connect', onConnect);
 		socket.on('disconnect', onDisconnect);
@@ -116,10 +118,12 @@ export default function ThreeCardMonte() {
 		socket.on('complete', onComplete);
 
 		return () => {
+			setIsConnected(false);
 			socket.off('connect', onConnect);
 			socket.off('disconnect', onDisconnect);
-			socket.off('init');
-			socket.off('start');
+			socket.off('init', onInit);
+			socket.off('start', onStart);
+			socket.off('complete', onComplete);
 		};
 	}, [initGame, isConnected]);
 

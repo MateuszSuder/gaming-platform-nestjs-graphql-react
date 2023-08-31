@@ -20,7 +20,6 @@ export class UserResolver implements OnModuleInit {
   @UseGuards(AuthGuard)
   @Subscription((returns) => UserBalanceModel, {
     filter: (payload, variables, context) => {
-      console.log(payload);
       return payload.userBalance.userId === context.req.userId;
     },
   })

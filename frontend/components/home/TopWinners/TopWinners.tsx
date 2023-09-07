@@ -9,8 +9,6 @@ type Props = {};
 export default function TopWinners(props: Props) {
 	const {data, loading} = useTopWinsQuery();
 
-	console.log(data?.topWins.topWins)
-
 	const highestWins = ([...(data?.topWins.topWins || [])]).sort((a, b) => b.win - a.win);
 	const highestXWins = ([...(data?.topWins.topMultipliers || [])]).sort((a, b) => b.multiplier - a.multiplier);
 

@@ -39,7 +39,25 @@ import { SevenFruitsCompleteCommand } from './commands/impl/seven-fruits-complet
   namespace: 'seven-fruits',
 })
 export class SevenFruitsGateway implements OnGatewayConnection {
-  private readonly logger = new Logger('Seven fruits monte gateway');
+  private readonly logger = new Logger('Seven fruits gateway');
+
+  @SubscribeMessage(Events.Init)
+  async init(@ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
+    await this.waitForAuth(client, 3);
+
+    this.logger.log(`Got init for ${client.data.user.id}`);
+
+    try {
+      const initValue = await this.commandBus.execute(
+        new SevenFruitsInitCommand(client.data.user.id),
+      );
+
+      return new GameWsResponse(Events.Init, initValue, HttpStatus.OK);
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
 
   constructor(private readonly commandBus: CommandBus) {}
 
@@ -76,24 +94,6 @@ export class SevenFruitsGateway implements OnGatewayConnection {
       --retries;
 
       await this.waitForAuth(client, retries);
-    }
-  }
-
-  @SubscribeMessage(Events.Init)
-  async init(@ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
-    await this.waitForAuth(client, 3);
-
-    this.logger.log(`Got init for ${client.data.user.id}`);
-
-    try {
-      const initValue = await this.commandBus.execute(
-        new SevenFruitsInitCommand(client.data.user.id),
-      );
-
-      return new GameWsResponse(Events.Init, initValue, HttpStatus.OK);
-    } catch (e) {
-      this.logger.error(e);
-      throw e;
     }
   }
 

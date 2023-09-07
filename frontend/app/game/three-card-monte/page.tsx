@@ -96,6 +96,7 @@ export default function ThreeCardMonte() {
 		setGameState(GameState.Completed);
 	}
 
+
 	useEffect(() => {
 		function onConnect() {
 			setIsConnected(true);
@@ -106,16 +107,18 @@ export default function ThreeCardMonte() {
 			setIsConnected(false);
 		}
 
-		console.log(socket.connected);
-		console.log(isConnected);
-
-		!socket.connected && socket.connect();
+		if (socket.connected) {
+			initGame()
+		} else {
+			socket.connect();
+		}
 
 		socket.on('connect', onConnect);
 		socket.on('disconnect', onDisconnect);
 		socket.on('init', onInit);
 		socket.on('start', onStart);
 		socket.on('complete', onComplete);
+
 
 		return () => {
 			setIsConnected(false);
@@ -125,7 +128,7 @@ export default function ThreeCardMonte() {
 			socket.off('start', onStart);
 			socket.off('complete', onComplete);
 		};
-	}, [initGame, isConnected]);
+	}, [initGame]);
 
 	const onSubmit = () => {
 		if (activeCard === null) {

@@ -153,7 +153,7 @@ services:
       CHOKIDAR_USEPOLLING: true
       WDS_SOCKET_PORT: 3000
     build:
-      context: ./app
+      context: ./frontend
     volumes:
       - ./frontend:/app
       - ./frontend/app:/app/app

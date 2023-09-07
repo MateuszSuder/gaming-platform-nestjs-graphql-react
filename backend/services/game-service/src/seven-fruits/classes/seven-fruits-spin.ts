@@ -11,6 +11,38 @@ interface SymbolRange {
 }
 
 export class SevenFruitsSpin {
+  private static readonly symbolsRange: SymbolRange[] = Object.entries(
+    FruitsSlotSymbolPayouts,
+  ).reduce<SymbolRange[]>((acc, [symbol, payout], i) => {
+    if (i === 0) {
+      return [
+        {
+          min: 1,
+          max: payout.chance * 100,
+          symbol: symbol as FruitsSlotSymbol,
+        },
+      ];
+    } else {
+      const min = acc[i - 1].max + 1;
+      const max = min + (payout.chance * 100 - 1);
+
+      return [
+        ...acc,
+        {
+          min,
+          max,
+          symbol: symbol as FruitsSlotSymbol,
+        },
+      ];
+    }
+  }, []);
+
+  public win = 0;
+  public multiplier = 0;
+  public symbols: FruitsSlotSymbol[][] = [];
+  public winningLines: number[][][] = [];
+
+  private helpers = new GameHelpers();
   private readonly lines = [
     [
       [0, 0],
@@ -38,33 +70,6 @@ export class SevenFruitsSpin {
       [0, 2],
     ],
   ];
-  private helpers = new GameHelpers();
-
-  private static readonly symbolsRange: SymbolRange[] = Object.entries(
-    FruitsSlotSymbolPayouts,
-  ).reduce<SymbolRange[]>((acc, [symbol, payout], i) => {
-    if (i === 0) {
-      return [
-        {
-          min: 1,
-          max: payout.chance * 100,
-          symbol: symbol as FruitsSlotSymbol,
-        },
-      ];
-    } else {
-      const min = acc[i - 1].max + 1;
-      const max = min + (payout.chance * 100 - 1);
-
-      return [
-        ...acc,
-        {
-          min,
-          max,
-          symbol: symbol as FruitsSlotSymbol,
-        },
-      ];
-    }
-  }, []);
 
   private getRandomSymbol(): FruitsSlotSymbol {
     const n = this.helpers.generateRandomInteger(1, 100);
@@ -101,11 +106,6 @@ export class SevenFruitsSpin {
       }
     }
   }
-
-  public win = 0;
-  public multiplier = 0;
-  public symbols: FruitsSlotSymbol[][] = [];
-  public winningLines: number[][][] = [];
 
   constructor(public readonly bet: number) {
     this.spin();

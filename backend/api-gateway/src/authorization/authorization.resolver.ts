@@ -38,7 +38,6 @@ export class AuthorizationResolver {
       try {
         context.rep.setCookie('token', response.access_token);
       } catch (e) {
-        console.log(e);
         throw e;
       }
 

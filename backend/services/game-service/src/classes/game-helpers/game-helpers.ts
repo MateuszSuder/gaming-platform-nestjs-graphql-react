@@ -7,14 +7,4 @@ export class GameHelpers {
     const randomValue = randomBytes.readUInt32BE(0);
     return Math.floor((randomValue / 0xffffffff) * range) + min;
   }
-
-  public generateRandomIntegers(
-    min: number,
-    max: number,
-    numberOfIntegers: number,
-  ) {
-    return Array.from({ length: numberOfIntegers }).map(() =>
-      this.generateRandomInteger(min, max),
-    );
-  }
 }
